@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">CRA-Coimbra</string>
     <string name="login_title">Iniciar Sessão</string>
-    <string name="email">email</string>
-    <string name="password">password</string>
+    <string name="email">Endereço de Email</string>
+    <string name="email_hint">Email</string>
+    <string name="password">Palavra-Chave</string>
+    <string name="password_hint">Password</string>
 </resources>

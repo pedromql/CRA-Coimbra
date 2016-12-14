@@ -63,8 +63,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        // disable going back to the MainActivity
+        moveTaskToBack(true);
+    }
 
     public void login(View view){
 
@@ -146,8 +149,13 @@ public class LoginActivity extends AppCompatActivity {
             // JSON Object
             JSONObject jsonResponse = new JSONObject(response);
             if (jsonResponse.has("token")) {
-                Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
-                navigatetoHomeActivity(jsonResponse);
+                if (jsonResponse.getInt("tipo_privilegio") == 0) {
+                    Toast.makeText(getApplicationContext(), "Utilizador inválido!", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Sessão iniciada com sucesso!", Toast.LENGTH_LONG).show();
+                    navigatetoHomeActivity(jsonResponse);
+                }
             }
             else {
                 Toast.makeText(getApplicationContext(), jsonResponse.getString("result"), Toast.LENGTH_LONG).show();

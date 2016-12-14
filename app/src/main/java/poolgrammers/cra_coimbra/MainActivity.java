@@ -15,27 +15,24 @@ import java.util.Scanner;
 
 public class MainActivity extends Activity {
     private static final int REQ_LOGIN_CODE = 69;
-
     private String token;
+    private String nome;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String token = readTokenFromFile(this);
+        token = readTokenFromFile(this);
         if (token == null) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, REQ_LOGIN_CODE);
         }
         else {
-            //TODO check token validity
+            //TODO Normal behavior
         }
-
-
-
     }
-
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -44,7 +41,7 @@ public class MainActivity extends Activity {
                 if (intent.hasExtra("token")) {
                     saveTokenOnFile(this, intent.getStringExtra("token"));
                     System.out.println(readTokenFromFile(this));
-                    //TODO normal behavior
+                    //TODO Normal behavior
                 }
             }
         }
