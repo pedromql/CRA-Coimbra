@@ -30,7 +30,9 @@ public class MainActivity extends Activity {
             startActivityForResult(loginIntent, REQ_LOGIN_CODE);
         }
         else {
-            //TODO Normal behavior
+            Intent intent = new Intent(this, NavDrawer.class);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -41,7 +43,9 @@ public class MainActivity extends Activity {
                 if (intent.hasExtra("token")) {
                     saveTokenOnFile(this, intent.getStringExtra("token"));
                     System.out.println(readTokenFromFile(this));
-                    //TODO Normal behavior
+                    Intent new_intent = new Intent(this, NavDrawer.class);
+                    startActivity(new_intent);
+                    finish();
                 }
             }
         }
