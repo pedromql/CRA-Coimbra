@@ -68,23 +68,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View view){
 
-//        RequestParams params = new RequestParams();
-//        params.put("user_email", inputEmail.getText().toString().trim());
-//        params.put("email", "admin@admin.com");
-//        params.put("user_password", md5(inputPassword.getText().toString()));
-//        params.put("password", md5("rootadmin"));
-
-
-//        httppost.setEntity(new UrlEncodedFormEntity(builder
-//                .getNameValuePairs(), "UTF-8"));
-//
-//        // Execute HTTP Post Request
-//        HttpResponse response = httpclient.execute(httppost);
-
-//        invokeWS(params);
-
-//        new Teste().execute();
-
         String email = inputEmail.getText().toString().trim();
         String password = inputPassword.getText().toString().trim();
 
@@ -100,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                 params.put("email", email);
 //                params.put("email", email);
                 params.put("password", md5(password));
-//                params.put("password", password);
+//                params.put("password", md5(password));
 
                 invokeWS(params);
             }
@@ -199,57 +182,6 @@ public class LoginActivity extends AppCompatActivity {
 //            Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
 //        }
     }
-
-//    class Teste extends AsyncTask {
-//
-//        @Override
-//        protected Object doInBackground(Object[] params) {
-//            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-//            nameValuePairs.add(new BasicNameValuePair("email", "cra@cra.com"));
-//            nameValuePairs.add(new BasicNameValuePair("password", "cracracra"));
-//
-//            HttpClient httpclient=new DefaultHttpClient();
-//
-//            HttpPost httppost = new HttpPost(uri);
-//            httppost.setHeader(HTTP.CONTENT_TYPE,
-//                    "application/x-www-form-urlencoded");
-//            // Add your data
-//            try {
-//                httppost.setEntity(new StringEntity("email=admin@admin.com&password=rootadmin"));
-//            } catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
-//            }
-//
-//            try {
-//                HttpResponse response = httpclient.execute(httppost);
-//
-//                StringBuilder sb = new StringBuilder();
-//                try {
-//                    BufferedReader reader =
-//                            new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 65728);
-//                    String line = null;
-//
-//                    while ((line = reader.readLine()) != null) {
-//                        sb.append(line);
-//                    }
-//                }
-//                catch (IOException e) { e.printStackTrace(); }
-//                catch (Exception e) { e.printStackTrace(); }
-//
-//
-//                System.out.println("finalResult " + sb.toString());
-//
-//
-//                Log.d("Response:" , response.toString());
-//                return response;
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//
-//    }
 
     public static final String md5(final String s) {
         final String MD5 = "MD5";
