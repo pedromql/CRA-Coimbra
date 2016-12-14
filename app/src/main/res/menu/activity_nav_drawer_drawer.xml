@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_group1">
+        <item
+            android:id="@+id/nav_consultar_prova"
+            android:icon="@drawable/ic_mag_glass"
+            android:title="Consultar prova" />
+        <item
+            android:id="@+id/nav_responder_pre_convocatoria"
+            android:icon="@drawable/ic_calendar"
+            android:title="Responder pré-convocatória" />
+        <item
+            android:id="@+id/nav_alterar_disponibilidade"
+            android:icon="@drawable/ic_pencil"
+            android:title="Alterar disponibilidade" />
+    </group>
+
+    <group
+        android:id="@+id/menu_group2">
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="Terminar sessão" />
+
+    </group>
+
+</menu>
