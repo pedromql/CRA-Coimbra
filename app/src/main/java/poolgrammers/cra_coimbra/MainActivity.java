@@ -23,8 +23,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        token = readTokenFromFile(this);
+        token = readTokenFromFile(this, "token");
         if (token == null) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, REQ_LOGIN_CODE);
@@ -41,8 +40,8 @@ public class MainActivity extends Activity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQ_LOGIN_CODE) {
                 if (intent.hasExtra("token")) {
-                    saveTokenOnFile(this, intent.getStringExtra("token"));
-                    System.out.println(readTokenFromFile(this));
+                    saveTokenOnFile(this, intent.getStringExtra("token"), intent.getStringExtra("email"), intent.getStringExtra("nome"));
+                    System.out.println(readTokenFromFile(this, "token"));
                     Intent new_intent = new Intent(this, NavDrawer.class);
                     startActivity(new_intent);
                     finish();
@@ -51,19 +50,28 @@ public class MainActivity extends Activity {
         }
     }
 
-    public static String readTokenFromFile(Context context) {
+    public static String readTokenFromFile(Context context, String key) {
+        int lineNumber = 0;
+        if (key.compareTo("token") == 1) lineNumber = 1;
+        else if (key.compareTo("email") == 1) lineNumber = 2;
+        else if (key.compareTo("nome") == 1) lineNumber = 3;
         try {
             Scanner scanner = new Scanner(context.openFileInput("token.txt"));
+            for (int i = 1; i < lineNumber; i++) {
+                scanner.nextLine();
+            }
             return scanner.nextLine();
         } catch (FileNotFoundException e) {
             return null;
         }
     }
 
-    public static void saveTokenOnFile(Context context, String token) {
+    public static void saveTokenOnFile(Context context, String token, String email, String nome) {
         try {
             PrintStream printStream = new PrintStream(context.openFileOutput("token.txt",Context.MODE_PRIVATE));
             printStream.println(token);
+            printStream.println(email);
+            printStream.println(nome);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

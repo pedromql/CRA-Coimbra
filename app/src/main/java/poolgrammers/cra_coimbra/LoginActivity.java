@@ -132,6 +132,8 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent();
         try {
             intent.putExtra("token",responseObject.getString("token"));
+            intent.putExtra("email",inputEmail.getText().toString().trim());
+            intent.putExtra("nome",responseObject.getString("nome"));
             setResult(RESULT_OK, intent);
             finish();
         } catch (JSONException e) {
