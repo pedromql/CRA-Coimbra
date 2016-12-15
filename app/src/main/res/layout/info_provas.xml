@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/modalidade"
+        android:text="@string/modalidade"
+        android:fontFamily="sans-serif"
+        android:textSize="18sp"
+        android:lineSpacingExtra="8sp"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/black"
+         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/input_modalidade"
+        android:fontFamily="sans-serif"
+        android:textSize="18sp"
+        android:lineSpacingExtra="8sp"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+
+        />
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/local"
+        android:text="@string/local"
+        android:fontFamily="sans-serif"
+        android:textSize="18sp"
+        android:lineSpacingExtra="8sp"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/black"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/input_local"
+        android:fontFamily="sans-serif"
+        android:textSize="18sp"
+        android:lineSpacingExtra="8sp"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/regulamento"
+        android:text="@string/regulamento"
+        android:fontFamily="sans-serif"
+        android:textSize="18sp"
+        android:lineSpacingExtra="8sp"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/black"
+        android:autoLink="web"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/input_regulamento"
+        android:fontFamily="sans-serif"
+        android:textSize="18sp"
+        android:lineSpacingExtra="8sp"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+
+        />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/responsavel_cra"
+        android:text="@string/responsavel_cra"
+        android:fontFamily="sans-serif"
+        android:textSize="18sp"
+        android:lineSpacingExtra="8sp"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/black"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/input_responsavel_cra"
+        android:fontFamily="sans-serif"
+        android:textSize="18sp"
+        android:lineSpacingExtra="8sp"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/juiz_arbitro"
+        android:text="@string/juiz_arbitro"
+        android:fontFamily="sans-serif"
+        android:textSize="18sp"
+        android:lineSpacingExtra="8sp"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/black"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/input_juiz_arbitro"
+        android:fontFamily="sans-serif"
+        android:textSize="18sp"
+        android:lineSpacingExtra="8sp"
+        android:textStyle="normal|bold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+
+        />
+
+</LinearLayout>

@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">CRA-Coimbra</string>
+    <string name="modalidade">Modalidade:</string>
+    <string name="titulo_consultar_prova">Escolha a Prova:</string>
+    <string name="local">Local:</string>
+    <string name="regulamento">Regulamento:</string>
+    <string name="responsavel_cra">Responsável CRA:</string>
+    <string name="juiz_arbitro">Juíz Árbitro:</string>
+    <string name="sessao">Sessão</string>
+    <string name="data">Data</string>
+    <string name="hora">Hora</string>
+
 </resources>
