@@ -18,6 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+
 public class NavDrawer extends AppCompatActivity
         implements OnNavigationItemSelectedListener, AlterarDisponibilidade.OnFragmentInteractionListener,
                     PesquisarProva.OnFragmentInteractionListener, ResponderPreConvocatoria.OnFragmentInteractionListener {
@@ -89,7 +91,20 @@ public class NavDrawer extends AppCompatActivity
             fragmentClass = ResponderPreConvocatoria.class;
         } else if (id == R.id.nav_alterar_disponibilidade) {
             fragmentClass = AlterarDisponibilidade.class;
-        } else if (id == R.id.nav_logout) {}
+        } else if (id == R.id.nav_logout) {
+            //Delete token, removes all fragments and finishes activity.
+            MainActivity.deleteTokenFile(this);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            List<Fragment> fragments = fragmentManager.getFragments();
+            if(fragments != null){
+                for(Fragment frag : fragments){
+                    if(frag != null && frag.isVisible())
+                        fragmentManager.beginTransaction().remove(frag);
+                }
+            }
+            finish();
+            return false;
+        }
         else {
             fragmentClass = PesquisarProva.class;
         }
