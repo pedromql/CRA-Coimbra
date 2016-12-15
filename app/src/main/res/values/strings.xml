@@ -26,4 +26,5 @@
     <string name="hello_blank_fragment">Hello blank fragment1</string>
     <string name="select_competion">Seleccione a prova:</string>
     <string name="responder_pre_convocatoria_button">Submeter Resposta</string>
+    <string name="alterar_disponibilidade_pre_convocatoria_button">Alterar Disponibilidade</string>
 </resources>
