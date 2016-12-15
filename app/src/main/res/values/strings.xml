@@ -10,4 +10,18 @@
     <string name="data">Data</string>
     <string name="hora">Hora</string>
 
+    <string name="login_title">Iniciar Sessão</string>
+    <string name="email">Endereço de Email</string>
+    <string name="email_hint">Email</string>
+    <string name="password">Palavra-Chave</string>
+    <string name="password_hint">Password</string>
+    <string name="title_activity_nav_drawer">NavDrawer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment1</string>
 </resources>
