@@ -178,7 +178,7 @@ public class ProvaActivity extends FragmentActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                    //HIDE DAS INFOS
+                //HIDE DAS INFOS
                 hideElements(2);
             }
 

@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:id="@+id/nome_arbitro"
-        android:text="Árbitro xpto"
+        android:text="Árbitro"
         android:layout_marginLeft="5dp"
         android:layout_marginBottom="5dp"
         android:textStyle="bold"
