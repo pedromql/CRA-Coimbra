@@ -104,9 +104,24 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
     //TODO Notificação diferente consoante o tipo, entre outros.
     private void pushNotification(Context context, String prova, String tipo) {
+        String title = "CRA - Coimbra - ";
+
+        switch (tipo){
+            case "-1":
+                title += "Juíz Árbitro";
+                break;
+            case "0":
+                title += "Pré-Convocatória";
+                break;
+            case "1":
+                title += "Convocatória Final";
+                break;
+            //default?
+        }
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_menu_camera)
-                .setContentTitle("CRA - Coimbra")
+                .setContentTitle(title)
                 .setContentText(prova + " " + tipo);
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);
