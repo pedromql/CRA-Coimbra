@@ -53,8 +53,8 @@ public class MainActivity extends Activity {
                     nome = intent.getStringExtra("nome");
                     saveTokenOnFile(this, intent.getStringExtra("token"), intent.getStringExtra("email"), intent.getStringExtra("nome"));
                     System.out.println(token + "\n" + email + "\n" + nome);
-                    Intent new_intent = new Intent(this, NavDrawer.class);
-                    startActivity(new_intent);
+//                    Intent new_intent = new Intent(this, NavDrawer.class);
+//                    startActivity(new_intent);
 //                    finish();
                 }
             }
