@@ -1,6 +1,7 @@
 package poolgrammers.cra_coimbra;
 
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +9,7 @@ import android.support.design.widget.NavigationView.OnNavigationItemSelectedList
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.AttributeSet;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +19,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.util.List;
 
 public class NavDrawer extends AppCompatActivity
         implements OnNavigationItemSelectedListener, AlterarDisponibilidade.OnFragmentInteractionListener,
@@ -29,8 +34,6 @@ public class NavDrawer extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -39,6 +42,9 @@ public class NavDrawer extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        TextView nomeArbitro = (TextView)navigationView.getHeaderView(0).findViewById(R.id.nome_arbitro);
+        nomeArbitro.setText(MainActivity.readTokenFromFile(this, "nome"));
     }
 
     @Override
@@ -89,7 +95,20 @@ public class NavDrawer extends AppCompatActivity
             fragmentClass = ResponderPreConvocatoria.class;
         } else if (id == R.id.nav_alterar_disponibilidade) {
             fragmentClass = AlterarDisponibilidade.class;
-        } else if (id == R.id.nav_logout) {}
+        } else if (id == R.id.nav_logout) {
+            //Delete token, removes all fragments and finishes activity.
+            MainActivity.deleteTokenFile(this);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            List<Fragment> fragments = fragmentManager.getFragments();
+            if(fragments != null){
+                for(Fragment frag : fragments){
+                    if(frag != null && frag.isVisible())
+                        fragmentManager.beginTransaction().remove(frag);
+                }
+            }
+            finish();
+            return false;
+        }
         else {
             fragmentClass = PesquisarProva.class;
         }

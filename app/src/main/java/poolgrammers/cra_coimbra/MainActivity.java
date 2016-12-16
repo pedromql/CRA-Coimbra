@@ -15,15 +15,22 @@ import java.util.Scanner;
 
 public class MainActivity extends Activity {
     private static final int REQ_LOGIN_CODE = 69;
-    private String token;
-    private String nome;
-    private String email;
+    private static String token;
+    private static String nome;
+    private static String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    protected void onResume() {
         token = readTokenFromFile(this, "token");
+        email = readTokenFromFile(this, "email");
+        nome = readTokenFromFile(this, "nome");
+        System.out.println(token + "\n" + email + "\n" + nome);
         if (token == null) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, REQ_LOGIN_CODE);
@@ -31,8 +38,9 @@ public class MainActivity extends Activity {
         else {
             Intent intent = new Intent(this, NavDrawer.class);
             startActivity(intent);
-            finish();
+//            finish();
         }
+        super.onResume();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -40,11 +48,14 @@ public class MainActivity extends Activity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQ_LOGIN_CODE) {
                 if (intent.hasExtra("token")) {
+                    token = intent.getStringExtra("token");
+                    email = intent.getStringExtra("email");
+                    nome = intent.getStringExtra("nome");
                     saveTokenOnFile(this, intent.getStringExtra("token"), intent.getStringExtra("email"), intent.getStringExtra("nome"));
-                    System.out.println(readTokenFromFile(this, "token"));
+                    System.out.println(token + "\n" + email + "\n" + nome);
                     Intent new_intent = new Intent(this, NavDrawer.class);
                     startActivity(new_intent);
-                    finish();
+//                    finish();
                 }
             }
         }
@@ -52,16 +63,16 @@ public class MainActivity extends Activity {
 
     public static String readTokenFromFile(Context context, String key) {
         int lineNumber = 0;
-        if (key.compareTo("token") == 1) lineNumber = 1;
-        else if (key.compareTo("email") == 1) lineNumber = 2;
-        else if (key.compareTo("nome") == 1) lineNumber = 3;
+        if (key.compareTo("token") == 0) lineNumber = 1;
+        else if (key.compareTo("email") == 0) lineNumber = 2;
+        else if (key.compareTo("nome") == 0) lineNumber = 3;
         try {
             Scanner scanner = new Scanner(context.openFileInput("token.txt"));
             for (int i = 1; i < lineNumber; i++) {
                 scanner.nextLine();
             }
             return scanner.nextLine();
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             return null;
         }
     }
