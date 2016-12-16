@@ -377,7 +377,7 @@ public class PesquisarProva extends Fragment {
                     JSONArray result = new JSONArray(jsonResponse.getString("result"));
                     //for (int i = 0; i < jsonResponse.get("result"))
 
-                    Toast.makeText(getContext(), "You are successfully received Provas!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "You successfully received Provas!", Toast.LENGTH_LONG).show();
                     populateSpinner(result);
                 }
                 else {

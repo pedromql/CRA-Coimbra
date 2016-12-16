@@ -1,9 +1,13 @@
 package poolgrammers.cra_coimbra;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.design.widget.Snackbar;
@@ -20,12 +24,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 public class NavDrawer extends AppCompatActivity
         implements OnNavigationItemSelectedListener, AlterarDisponibilidade.OnFragmentInteractionListener,
-                    PesquisarProva.OnFragmentInteractionListener, ResponderPreConvocatoria.OnFragmentInteractionListener {
+        PesquisarProva.OnFragmentInteractionListener, ResponderPreConvocatoria.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +48,25 @@ public class NavDrawer extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        TextView nomeArbitro = (TextView)navigationView.getHeaderView(0).findViewById(R.id.nome_arbitro);
+        TextView nomeArbitro = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nome_arbitro);
         nomeArbitro.setText(MainActivity.readTokenFromFile(this, "nome"));
+
+        startNotificationFetcher();
+
+    }
+
+    public void startNotificationFetcher() {
+        Intent intent = new Intent(this, NotificationsBroadcastReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this.getApplicationContext(), 234324243, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        long firstTime = SystemClock.elapsedRealtime();
+        firstTime += 3 * 1000;
+        //Tem um comportamento pouco exacto para tempos pequenos, de acordo com os docs, por isso não vai ser mesmo de 10 em 10 segundos.
+        //ToDo substituir o intervalo em milisegundos pelo equivalente a 15 minutos, ou semelhante
+        //ToDo Settings para desactivar as notificações. Tornar o alarmmanager como atributo de forma a chamar o .cancel
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime,(10 * 1000), pendingIntent);
+
     }
 
     @Override
@@ -53,7 +75,7 @@ public class NavDrawer extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            moveTaskToBack(true);
         }
     }
 
@@ -100,16 +122,15 @@ public class NavDrawer extends AppCompatActivity
             MainActivity.deleteTokenFile(this);
             FragmentManager fragmentManager = getSupportFragmentManager();
             List<Fragment> fragments = fragmentManager.getFragments();
-            if(fragments != null){
-                for(Fragment frag : fragments){
-                    if(frag != null && frag.isVisible())
+            if (fragments != null) {
+                for (Fragment frag : fragments) {
+                    if (frag != null && frag.isVisible())
                         fragmentManager.beginTransaction().remove(frag);
                 }
             }
             finish();
             return false;
-        }
-        else {
+        } else {
             fragmentClass = PesquisarProva.class;
         }
 
