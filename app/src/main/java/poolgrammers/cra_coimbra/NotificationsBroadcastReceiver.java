@@ -108,7 +108,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
         switch (tipo){
             case "-1":
-                title += "Juíz Árbitro";
+                title += "Prova criada";
                 break;
             case "0":
                 title += "Pré-Convocatória";
