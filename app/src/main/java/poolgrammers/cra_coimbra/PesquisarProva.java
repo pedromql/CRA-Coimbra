@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -28,8 +29,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
+import poolgrammers.cra_coimbra.Util.InfoProvaItem;
+import poolgrammers.cra_coimbra.Util.SessionItem;
 
 
 /**
@@ -56,7 +60,11 @@ public class PesquisarProva extends Fragment {
     private String uri1 = "http://testes-poolgrammers.dei.uc.pt/api/get_prova";
     private ProgressDialog pDialog;
     TableLayout tabela_sessoes;
-    LinearLayout info_provas;
+
+    ListView info_provas;
+    ConsultaProvaAdapter consultaProvaAdapter;
+    List<InfoProvaItem> infoProvaArray = new ArrayList<>();
+
     TextView modalidade;
     TextView regulamento;
     TextView local;
@@ -101,20 +109,24 @@ public class PesquisarProva extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.activity_consultar_prova, container, false);
+        View view = inflater.inflate(R.layout.fragment_pesquisar_prova, container, false);
         mainView = view;
 
         pDialog = new ProgressDialog(getContext());
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
 
-        tabela_sessoes = (TableLayout) view.findViewById(R.id.tabela_sessoes);
-        info_provas = (LinearLayout) view.findViewById(R.id.info_provas);
+//        tabela_sessoes = (TableLayout) view.findViewById(R.id.tabela_sessoes);
+//        info_provas = (LinearLayout) view.findViewById(R.id.info_provas);
+
+        info_provas = (ListView) view.findViewById(R.id.consultar_prova_list);
+        consultaProvaAdapter = new ConsultaProvaAdapter(this.getContext(), R.layout.info_provas, infoProvaArray);
+        info_provas.setAdapter(consultaProvaAdapter);
 
         //Meter a tabela das sessões e info das provas a hidden
         // tabela_sessoes.setVisibility(View.INVISIBLE);
         //info_provas.setVisibility(View.INVISIBLE);
-        hideElements(2);
+//        hideElements(2);
 
         //Fazer get das provas para o spinner
         getProvas();
@@ -203,6 +215,7 @@ public class PesquisarProva extends Fragment {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("token",MainActivity.readTokenFromFile(getContext(), "token"));
+        params.put("responder","false");
         client.get(uri, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -220,7 +233,7 @@ public class PesquisarProva extends Fragment {
     private void populateSpinner(JSONArray resultProvas) throws JSONException {
         List<String> list = new ArrayList<String>();
         Spinner provas = (Spinner) mainView.findViewById(R.id.spinner_provas);
-        list.add("");
+        //list.add("");
 
         for(int i = 0; i< resultProvas.length(); i++){
             JSONObject prova_auxiliar = resultProvas.getJSONObject(i);
@@ -236,21 +249,24 @@ public class PesquisarProva extends Fragment {
 
     private void selectProva() {
         provas = (Spinner) mainView.findViewById(R.id.spinner_provas);
-        tabela_sessoes = (TableLayout) mainView.findViewById(R.id.tabela_sessoes);
-        info_provas = (LinearLayout) mainView.findViewById(R.id.info_provas);
+//        tabela_sessoes = (TableLayout) mainView.findViewById(R.id.tabela_sessoes);
+//        info_provas = (LinearLayout) mainView.findViewById(R.id.info_provas);
 
         provas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String provaSelecionada = provas.getSelectedItem().toString();
-                hideElements(2);
+//                hideElements(2);
+                infoProvaArray.clear();
                 getInfoProva(provaSelecionada);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 //HIDE DAS INFOS
-                hideElements(2);
+//                hideElements(2);
+                infoProvaArray.clear();
+                consultaProvaAdapter.notifyDataSetChanged();
             }
 
         });
@@ -289,7 +305,7 @@ public class PesquisarProva extends Fragment {
                 if (jsonResponse.has("result")) {
                     JSONArray result = new JSONArray(jsonResponse.getString("result"));
                     fillProvaInfo(result);
-                    Toast.makeText(getContext(), "You are successfully received Provas!", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getContext(), "You have successfully received Provas!", Toast.LENGTH_LONG).show();
 
                 }
                 else {
@@ -318,34 +334,21 @@ public class PesquisarProva extends Fragment {
 //
 
         //buscar text input
-        modalidade = (TextView) mainView.findViewById(R.id.input_modalidade);
-        regulamento = (TextView) mainView.findViewById(R.id.input_regulamento);
-        local = (TextView) mainView.findViewById(R.id.input_local);
-        responsavel_cra = (TextView) mainView.findViewById(R.id.input_responsavel_cra);
-        juiz_arbitro = (TextView) mainView.findViewById(R.id.input_juiz_arbitro);
-
-        //definir objectos com cada uma das cenas do backend
         JSONObject prova = result.getJSONObject(0);
         JSONObject localidade = result.getJSONObject(1);
         JSONObject juizArbitroObject = result.getJSONObject(2);
         JSONObject responsavelCraObject = result.getJSONObject(3);
         JSONArray sessoes = new JSONArray(result.getString(4));
 
+        infoProvaArray.add(new InfoProvaItem(1, prova.getString("modalidade"), prova.getString("path_regulamento"), localidade.getString("nome"), responsavelCraObject.getString("nome"), juizArbitroObject.getString("nome")));
+        for (int i = 0; i < sessoes.length(); i+=2) {
+            JSONObject sessao = sessoes.getJSONObject(i);
+            String data = String.format(Locale.UK, "%02d", sessao.getInt("dia")) + "/" + String.format(Locale.UK, "%02d", sessao.getInt("mes")) + "/" + sessao.getInt("ano");
+            String tempo = String.format(Locale.UK, "%02d", sessao.getInt("hora")) + ":" + String.format(Locale.UK, "%02d", sessao.getInt("minutos"));
+            infoProvaArray.add(new InfoProvaItem(2, data, tempo));
 
-
-        //prova.getString("");
-
-
-        modalidade.setText(prova.getString("modalidade"));
-        regulamento.setText(prova.getString("path_regulamento"));
-        Linkify.addLinks(regulamento, Linkify.WEB_URLS);
-        local.setText(localidade.getString("nome"));
-        responsavel_cra.setText(responsavelCraObject.getString("nome"));
-        juiz_arbitro.setText(juizArbitroObject.getString("nome"));
-
-        showElements(0);
-        addRows(sessoes);
-        showElements(1);
+        }
+        consultaProvaAdapter.notifyDataSetChanged();
     }
 
 
@@ -377,7 +380,6 @@ public class PesquisarProva extends Fragment {
                     JSONArray result = new JSONArray(jsonResponse.getString("result"));
                     //for (int i = 0; i < jsonResponse.get("result"))
 
-                    Toast.makeText(getContext(), "You successfully received Provas!", Toast.LENGTH_LONG).show();
                     populateSpinner(result);
                 }
                 else {
