@@ -233,7 +233,7 @@ public class PesquisarProva extends Fragment {
     private void populateSpinner(JSONArray resultProvas) throws JSONException {
         List<String> list = new ArrayList<String>();
         Spinner provas = (Spinner) mainView.findViewById(R.id.spinner_provas);
-        list.add("");
+        //list.add("");
 
         for(int i = 0; i< resultProvas.length(); i++){
             JSONObject prova_auxiliar = resultProvas.getJSONObject(i);
