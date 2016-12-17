@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -104,9 +105,35 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
     //TODO Notificação diferente consoante o tipo, entre outros.
     private void pushNotification(Context context, String prova, String tipo) {
+        String title = "CRA - Coimbra - ";
+
+        switch (tipo){
+            case "-1":
+                title += "Prova criada";
+                break;
+            case "0":
+                title += "Pré-Convocatória";
+                break;
+            case "1":
+                title += "Convocatória Final";
+                break;
+            case "2":
+                title += "Renovar Filiação";
+                prova = "Verifique o email enviado";
+                break;
+            case "3":
+                title += "Exame Médico";
+                prova = "Validade do exame por expirar";
+                break;
+            default:
+                title = "CRA - Coimbra";
+                break;
+        }
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_menu_camera)
-                .setContentTitle("CRA - Coimbra")
+                .setSmallIcon(R.drawable.ic_swim)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_swim))
+                .setContentTitle(title)
                 .setContentText(prova + " " + tipo);
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);

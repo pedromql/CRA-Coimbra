@@ -32,6 +32,7 @@ public class NavDrawer extends AppCompatActivity
         implements OnNavigationItemSelectedListener, AlterarDisponibilidade.OnFragmentInteractionListener,
         PesquisarProva.OnFragmentInteractionListener, ResponderPreConvocatoria.OnFragmentInteractionListener {
 
+    private AlarmManager alarmManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,18 +64,29 @@ public class NavDrawer extends AppCompatActivity
 
         startNotificationFetcher();
 
+        //Começa no ecrã de pesquisa de prova, just because
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) PesquisarProva.class.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragments_content, fragment).commit();
+
+
     }
 
     public void startNotificationFetcher() {
         Intent intent = new Intent(this, NotificationsBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 this.getApplicationContext(), 234324243, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         long firstTime = SystemClock.elapsedRealtime();
         firstTime += 3 * 1000;
         //Tem um comportamento pouco exacto para tempos pequenos, de acordo com os docs, por isso não vai ser mesmo de 10 em 10 segundos.
-        //ToDo substituir o intervalo em milisegundos pelo equivalente a 15 minutos, ou semelhante
-        //ToDo Settings para desactivar as notificações. Tornar o alarmmanager como atributo de forma a chamar o .cancel
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime,(10 * 1000), pendingIntent);
 
     }
@@ -89,12 +101,14 @@ public class NavDrawer extends AppCompatActivity
         }
     }
 
-    @Override
+
+    //Caso se queiram pôr settings
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.nav_drawer, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
