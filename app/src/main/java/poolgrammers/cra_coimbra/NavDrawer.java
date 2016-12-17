@@ -51,6 +51,16 @@ public class NavDrawer extends AppCompatActivity
         TextView nomeArbitro = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nome_arbitro);
         nomeArbitro.setText(MainActivity.readTokenFromFile(this, "nome"));
 
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) ResponderPreConvocatoria.class.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragments_content, fragment).commit();
+
         startNotificationFetcher();
 
     }

@@ -2,12 +2,12 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-
     <TableRow
         android:background="#E8EAF6"
         android:padding="5dp"
         android:id="@+id/firstrow">
         <TextView
+            android:id="@+id/session_number_info_prova"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -15,6 +15,7 @@
             android:text="@string/sessao"
             android:textStyle="normal|bold" />
         <TextView
+            android:id="@+id/session_date_info_prova"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -23,6 +24,7 @@
             android:text="@string/data"
             android:textStyle="normal|bold" />
         <TextView
+            android:id="@+id/session_time_info_prova"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#212121"
