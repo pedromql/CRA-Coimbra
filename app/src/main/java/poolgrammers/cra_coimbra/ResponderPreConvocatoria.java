@@ -220,7 +220,7 @@ public class ResponderPreConvocatoria extends Fragment {
                         JSONArray provasJSON = new JSONArray(jsonResponse.getString("result"));
                         for (int i = 0; i < provasJSON.length(); i++) {
                             JSONObject prova = provasJSON.getJSONObject(i);
-                            provas.add(prova.getString("designacao"));
+                            if (prova.getInt("tipo") == 0) provas.add(prova.getString("designacao"));
                         }
                         provasAdapter.notifyDataSetChanged();
                     }
