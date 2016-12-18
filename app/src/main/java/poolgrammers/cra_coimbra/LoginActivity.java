@@ -39,6 +39,8 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.protocol.HTTP;
 
+import static poolgrammers.cra_coimbra.Utility.getServerUrl;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Button loginButton;
@@ -46,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText inputPassword;
     private ProgressDialog pDialog;
 
-    private String uri = "http://testes-poolgrammers.dei.uc.pt/api/login";
+    private String uri = getServerUrl()+"login";
     public static String USER_TOKEN = "poolgrammers.cra_coimbra.MainActivity.USER_TOKEN";
 
     @Override

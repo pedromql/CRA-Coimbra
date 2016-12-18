@@ -21,10 +21,12 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
+import static poolgrammers.cra_coimbra.Utility.getServerUrl;
+
 
 public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
-    private String uri = "http://testes-poolgrammers.dei.uc.pt/api/get_notifications";
+    private String uri = getServerUrl()+"get_notifications";
 
 
     @Override

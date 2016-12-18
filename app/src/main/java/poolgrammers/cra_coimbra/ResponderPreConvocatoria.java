@@ -31,6 +31,8 @@ import java.util.Locale;
 import cz.msebera.android.httpclient.Header;
 import poolgrammers.cra_coimbra.Util.SessionItem;
 
+import static poolgrammers.cra_coimbra.Utility.getServerUrl;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -204,7 +206,7 @@ public class ResponderPreConvocatoria extends Fragment {
          * call the get() method with the uri, params and the AsynchResponseHandler interface as parameters
          */
         AsyncHttpClient client = new AsyncHttpClient();
-        String uri = "http://testes-poolgrammers.dei.uc.pt/api/get_provas";
+        String uri = getServerUrl()+"get_provas";
         client.get(uri, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int code, Header[] headers, byte[] bytes) {
@@ -260,7 +262,7 @@ public class ResponderPreConvocatoria extends Fragment {
          * call the get() method with the uri, params and the AsynchResponseHandler interface as parameters
          */
         AsyncHttpClient client = new AsyncHttpClient();
-        String uri = "http://testes-poolgrammers.dei.uc.pt/api/get_prova";
+        String uri = getServerUrl()+"get_prova";
         client.get(uri, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int code, Header[] headers, byte[] bytes) {
@@ -334,7 +336,7 @@ public class ResponderPreConvocatoria extends Fragment {
          * call the get() method with the uri, params and the AsynchResponseHandler interface as parameters
          */
         AsyncHttpClient client = new AsyncHttpClient();
-        String uri = "http://testes-poolgrammers.dei.uc.pt/api/responder_pre_convocatoria";
+        String uri = getServerUrl()+"responder_pre_convocatoria";
         client.post(uri, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int code, Header[] headers, byte[] bytes) {

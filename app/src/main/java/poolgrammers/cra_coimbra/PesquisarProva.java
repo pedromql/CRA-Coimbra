@@ -35,6 +35,8 @@ import cz.msebera.android.httpclient.Header;
 import poolgrammers.cra_coimbra.Util.InfoProvaItem;
 import poolgrammers.cra_coimbra.Util.SessionItem;
 
+import static poolgrammers.cra_coimbra.Utility.getServerUrl;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,8 +58,8 @@ public class PesquisarProva extends Fragment {
 
     View mainView;
 
-    private String uri = "http://testes-poolgrammers.dei.uc.pt/api/get_provas";
-    private String uri1 = "http://testes-poolgrammers.dei.uc.pt/api/get_prova";
+    private String uri = getServerUrl()+"get_provas";
+    private String uri1 = getServerUrl()+"get_prova";
     private ProgressDialog pDialog;
     TableLayout tabela_sessoes;
 
