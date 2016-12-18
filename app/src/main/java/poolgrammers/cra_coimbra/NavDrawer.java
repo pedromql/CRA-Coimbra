@@ -76,8 +76,8 @@ public class NavDrawer extends AppCompatActivity
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         long firstTime = SystemClock.elapsedRealtime();
         firstTime += 3 * 1000;
-        //Tem um comportamento pouco exacto para tempos pequenos, de acordo com os docs, por isso não vai ser mesmo de 10 em 10 segundos.
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime,(10 * 1000), pendingIntent);
+        //De 10 em 10 minutos
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime,(600 * 1000), pendingIntent);
 
     }
 
@@ -132,6 +132,11 @@ public class NavDrawer extends AppCompatActivity
         } else if (id == R.id.nav_alterar_disponibilidade) {
             fragmentClass = AlterarDisponibilidade.class;
         } else if (id == R.id.nav_logout) {
+            //Cancels alarm
+            Intent intent = new Intent(this, NotificationsBroadcastReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    this.getApplicationContext(), 234324243, intent, 0);
+            alarmManager.cancel(pendingIntent);
             //Delete token, removes all fragments and finishes activity.
             MainActivity.deleteTokenFile(this);
             FragmentManager fragmentManager = getSupportFragmentManager();

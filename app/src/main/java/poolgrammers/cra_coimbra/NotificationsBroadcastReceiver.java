@@ -9,7 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.widget.Toast;
+import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -29,16 +29,10 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "Fetch notifications!",
-                Toast.LENGTH_LONG).show();
-
         getNotifications(context);
-
-
     }
 
     private void getNotifications(final Context context) {
-
         // Make RESTful webservice call using AsyncHttpClient object
         /**
          * Create the AsyncHttpClient object;
@@ -59,7 +53,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
+                Log.e("Get notifications", "Connection problem - "+ throwable);
             }
         });
     }
@@ -91,19 +85,19 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
                 }
 
             } else {
-                //TODO só para testar que funca
-                String output = jsonResponse.getString("result");
-                pushNotification(context, output, "");
+                //Descomentar para testar que funca
+                //String output = jsonResponse.getString("result");
+                //pushNotification(context, output, "");
             }
 
         } catch (JSONException e) {
-            Toast.makeText(context, "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
+            //NO TOASTS FOR YOU.
+            //Toast.makeText(context, "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
             e.printStackTrace();
 
         }
     }
 
-    //TODO Notificação diferente consoante o tipo, entre outros.
     private void pushNotification(Context context, String prova, String tipo) {
         String title = "CRA - Coimbra - ";
 
