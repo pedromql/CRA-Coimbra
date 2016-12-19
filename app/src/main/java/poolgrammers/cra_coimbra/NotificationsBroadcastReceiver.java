@@ -26,7 +26,7 @@ import static poolgrammers.cra_coimbra.Utility.getServerUrl;
 
 public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
-    private String uri = getServerUrl()+"get_notifications";
+    private String uri = getServerUrl() + "get_notifications";
 
 
     @Override
@@ -55,7 +55,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Log.e("Get notifications", "Connection problem - "+ throwable);
+                Log.e("Get notifications", "Connection problem - " + throwable);
             }
         });
     }
@@ -70,11 +70,11 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
 
             if (jsonResponse.getString("success").compareTo("true") == 0) {
-                // Vibrate the mobile phone
-                Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-                vibrator.vibrate(1000);
-
+                
                 if (jsonResponse.has("notifications")) {
+                    // Vibrate the mobile phone
+                    Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+                    vibrator.vibrate(1000);
                     JSONArray result = new JSONArray(jsonResponse.getString("notifications"));
 
                     for (int i = 0; i < result.length(); i++) {
@@ -103,7 +103,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
     private void pushNotification(Context context, String prova, String tipo) {
         String title = "CRA - Coimbra - ";
 
-        switch (tipo){
+        switch (tipo) {
             case "-1":
                 title += "Prova criada";
                 break;
