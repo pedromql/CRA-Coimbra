@@ -70,7 +70,6 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
 
             if (jsonResponse.getString("success").compareTo("true") == 0) {
-                
                 if (jsonResponse.has("notifications")) {
                     // Vibrate the mobile phone
                     Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -130,7 +129,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.ic_swim)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_swim))
                 .setContentTitle(title)
-                .setContentText(prova + " " + tipo);
+                .setContentText(prova);
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);
 
