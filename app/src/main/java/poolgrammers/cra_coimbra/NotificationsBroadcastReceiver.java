@@ -26,7 +26,7 @@ import static poolgrammers.cra_coimbra.Utility.getServerUrl;
 
 public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
-    private String uri = getServerUrl()+"get_notifications";
+    private String uri = getServerUrl() + "get_notifications";
 
 
     @Override
@@ -55,7 +55,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Log.e("Get notifications", "Connection problem - "+ throwable);
+                Log.e("Get notifications", "Connection problem - " + throwable);
             }
         });
     }
@@ -70,18 +70,17 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
 
 
             if (jsonResponse.getString("success").compareTo("true") == 0) {
-                // Vibrate the mobile phone
-                Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-                vibrator.vibrate(1000);
-
                 if (jsonResponse.has("notifications")) {
+                    // Vibrate the mobile phone
+                    Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+                    vibrator.vibrate(1000);
                     JSONArray result = new JSONArray(jsonResponse.getString("notifications"));
 
                     for (int i = 0; i < result.length(); i++) {
                         JSONObject prova_auxiliar = result.getJSONObject(i);
                         String prova = prova_auxiliar.getString("designacao");
                         String tipo = prova_auxiliar.getString("tipo_prova");
-                        pushNotification(context, prova, tipo);
+                        pushNotification(context, prova, tipo, i);
                     }
 
                 }
@@ -89,7 +88,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
             } else {
                 //Descomentar para testar que funca
                 //String output = jsonResponse.getString("result");
-                //pushNotification(context, output, "");
+                // pushNotification(context, output, "");
             }
 
         } catch (JSONException e) {
@@ -100,10 +99,10 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private void pushNotification(Context context, String prova, String tipo) {
+    private void pushNotification(Context context, String prova, String tipo, int i) {
         String title = "CRA - Coimbra - ";
 
-        switch (tipo){
+        switch (tipo) {
             case "-1":
                 title += "Prova criada";
                 break;
@@ -130,7 +129,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.ic_swim)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_swim))
                 .setContentTitle(title)
-                .setContentText(prova + " " + tipo);
+                .setContentText(prova);
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);
 
@@ -151,7 +150,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
-        mNotificationManager.notify(0, mBuilder.build());
+        mNotificationManager.notify(i, mBuilder.build());
     }
 
 }
