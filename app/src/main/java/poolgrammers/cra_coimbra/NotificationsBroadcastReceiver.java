@@ -80,7 +80,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
                         JSONObject prova_auxiliar = result.getJSONObject(i);
                         String prova = prova_auxiliar.getString("designacao");
                         String tipo = prova_auxiliar.getString("tipo_prova");
-                        pushNotification(context, prova, tipo);
+                        pushNotification(context, prova, tipo, i);
                     }
 
                 }
@@ -88,7 +88,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
             } else {
                 //Descomentar para testar que funca
                 //String output = jsonResponse.getString("result");
-                //pushNotification(context, output, "");
+                // pushNotification(context, output, "");
             }
 
         } catch (JSONException e) {
@@ -99,7 +99,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private void pushNotification(Context context, String prova, String tipo) {
+    private void pushNotification(Context context, String prova, String tipo, int i) {
         String title = "CRA - Coimbra - ";
 
         switch (tipo) {
@@ -150,7 +150,7 @@ public class NotificationsBroadcastReceiver extends BroadcastReceiver {
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
-        mNotificationManager.notify(0, mBuilder.build());
+        mNotificationManager.notify(i, mBuilder.build());
     }
 
 }
