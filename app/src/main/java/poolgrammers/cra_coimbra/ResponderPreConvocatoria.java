@@ -354,7 +354,12 @@ public class ResponderPreConvocatoria extends Fragment {
                         sessionAdapter.notifyDataSetChanged();
                         provas.remove(prova_seleccionada);
                         provasAdapter.notifyDataSetChanged();
-                        prova_seleccionada = "";
+                        provasSpinner.setSelection(0);
+                        if (provas.size() > 0) {
+                            prova_seleccionada = provasSpinner.getItemAtPosition(0).toString();
+                            getSessoes(provasSpinner.getItemAtPosition(0).toString());
+                        }
+//                        prova_seleccionada = "";
                     }
                     else {
                         Toast.makeText(getContext(), jsonResponse.getString("result"), Toast.LENGTH_LONG).show();

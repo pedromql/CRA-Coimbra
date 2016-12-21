@@ -76,8 +76,8 @@ public class NavDrawer extends AppCompatActivity
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         long firstTime = SystemClock.elapsedRealtime();
         firstTime += 3 * 1000;
-        //De 10 em 10 minutos
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime,(600 * 1000), pendingIntent);
+        //De 4 em 4 horas
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime,(60*60*4 * 1000), pendingIntent);
 
     }
 
