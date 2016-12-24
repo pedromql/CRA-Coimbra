@@ -9,7 +9,7 @@ public class Utility {
 
     //Email Pattern
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*"+"@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    private static final String SERVER_URL = "http://poolgrammers.dei.uc.pt/api/";
+    private static final String SERVER_URL = "http://testes-poolgrammers.dei.uc.pt/api/";
     /**
      * Validate Email with regular expression
      *

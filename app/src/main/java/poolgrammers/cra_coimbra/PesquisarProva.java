@@ -118,17 +118,9 @@ public class PesquisarProva extends Fragment {
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
 
-//        tabela_sessoes = (TableLayout) view.findViewById(R.id.tabela_sessoes);
-//        info_provas = (LinearLayout) view.findViewById(R.id.info_provas);
-
         info_provas = (ListView) view.findViewById(R.id.consultar_prova_list);
         consultaProvaAdapter = new ConsultaProvaAdapter(this.getContext(), R.layout.info_provas, infoProvaArray);
         info_provas.setAdapter(consultaProvaAdapter);
-
-        //Meter a tabela das sessões e info das provas a hidden
-        // tabela_sessoes.setVisibility(View.INVISIBLE);
-        //info_provas.setVisibility(View.INVISIBLE);
-//        hideElements(2);
 
         //Fazer get das provas para o spinner
         getProvas();
@@ -177,36 +169,6 @@ public class PesquisarProva extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    //função que esconde ou as infos(0) ou a tabela(1) ou os dois(2)
-    private void hideElements(int i) {
-        if (i==0){
-            info_provas.setVisibility(View.INVISIBLE);
-        }
-        if (i==1){
-            tabela_sessoes.setVisibility(View.INVISIBLE);
-
-        }
-        if(i==2) {
-            tabela_sessoes.setVisibility(View.INVISIBLE);
-            info_provas.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    //função que mostra ou as infos(0) ou a tabela(1) ou os dois(2)
-    private void showElements(int i) {
-        if (i==0){
-            info_provas.setVisibility(View.VISIBLE);
-        }
-        if (i==1){
-            tabela_sessoes.setVisibility(View.VISIBLE);
-
-        }
-        if(i==2) {
-            tabela_sessoes.setVisibility(View.VISIBLE);
-            info_provas.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void getProvas() {
         pDialog.show();
         // Make RESTful webservice call using AsyncHttpClient object
@@ -251,22 +213,17 @@ public class PesquisarProva extends Fragment {
 
     private void selectProva() {
         provas = (Spinner) mainView.findViewById(R.id.spinner_provas);
-//        tabela_sessoes = (TableLayout) mainView.findViewById(R.id.tabela_sessoes);
-//        info_provas = (LinearLayout) mainView.findViewById(R.id.info_provas);
 
         provas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String provaSelecionada = provas.getSelectedItem().toString();
-//                hideElements(2);
                 infoProvaArray.clear();
                 getInfoProva(provaSelecionada);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                //HIDE DAS INFOS
-//                hideElements(2);
                 infoProvaArray.clear();
                 consultaProvaAdapter.notifyDataSetChanged();
             }
@@ -322,20 +279,7 @@ public class PesquisarProva extends Fragment {
     }
 
     private void fillProvaInfo(JSONArray result) throws JSONException {
-//            prova = result[0];
-//            localidade = result[1];
-//            juiz_arbitro = result[2];
-//            responsavel_cra = result[3];
-//            sessoes = result[4];
-//        $("#designacao").html(prova.designacao);
-//        $("#modalidade").html(prova.modalidade);
-//        $("#local").html(localidade.nome);
-//        $("#ja").html(juiz_arbitro.nome);
-//        $("#cra").html(responsavel_cra.nome);
-//        $("#regulamento").html("<p>" + prova.nome_regulamento + "</p>").attr("href", prova.path_regulamento);
-//
 
-        //buscar text input
         JSONObject prova = result.getJSONObject(0);
         JSONObject localidade = result.getJSONObject(1);
         JSONObject juizArbitroObject = result.getJSONObject(2);
@@ -360,12 +304,7 @@ public class PesquisarProva extends Fragment {
 
         Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
 
-
     }
-
-
-
-
 
     public void onGetProvasSuccess(byte[] bytes){
         String response = new String(bytes);
@@ -373,7 +312,7 @@ public class PesquisarProva extends Fragment {
         pDialog.hide();
 
         try {
-            // JSON Object
+
             JSONObject jsonResponse = new JSONObject(response);
 
 
@@ -389,10 +328,6 @@ public class PesquisarProva extends Fragment {
                 }
             }
 
-//            JSONArray obj = new JSONArray("["+response+"]");
-//            JSONObject obj1 = (new JSONArray(response)).getJSONObject(0);
-//            Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
-//            navigatetoHomeActivity(test);
         } catch (JSONException e) {
             Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -407,48 +342,6 @@ public class PesquisarProva extends Fragment {
         pDialog.hide();
 
         Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
-
-
     }
 
-
-
-    // TODO remover elementos da tabela  adicionar o segundo digito em meses e horas
-    //TODO alinhar :v
-    public void addRows(JSONArray sessoes) throws JSONException {
-        for (int i = 0; i < sessoes.length(); i+=2) {
-            JSONObject sessaoObject = sessoes.getJSONObject(i);
-
-
-//            /* Find Tablelayout defined in main.xml */
-//            TableLayout tl = (TableLayout) findViewById(R.id.tabela_sessoes);
-///* Create a new row to be added. */
-//            TableRow tr = new TableRow(this);
-//            tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-///* Create a Button to be the row-content. */
-//            TextView sessao = new TextView(this);
-//            sessao.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-///* Add Button to row. */
-//            tr.addView(sessao);
-///* Add row to TableLayout. */
-////tr.setBackgroundResource(R.drawable.sf_gradient_03);
-//            tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-//
-//
-            TableRow row = new TableRow(getContext());
-            TableRow.LayoutParams lp = new TableRow.LayoutParams();
-            row.setLayoutParams(lp);
-            TextView sessao = new TextView(getContext());
-            TextView data = new TextView(getContext());
-            TextView hora = new TextView(getContext());
-            sessao.setText("Sessão"+((i / 2) + 1));
-            data.setText(sessaoObject.getString("dia")+"/"+sessaoObject.getString("mes")+"/"+sessaoObject.getString("ano"));
-            hora.setText(sessaoObject.getString("hora")+":"+sessaoObject.getString("minutos"));
-            row.addView(sessao);
-            row.addView(data);
-            row.addView(hora);
-            tabela_sessoes.addView(row,((i / 2) + 1));
-
-        }
-    }
 }
