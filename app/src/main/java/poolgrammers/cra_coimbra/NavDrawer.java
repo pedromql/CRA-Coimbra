@@ -55,6 +55,8 @@ public class NavDrawer extends AppCompatActivity
 
     public DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
+    public Boolean isOnline = true;
+
     private AlarmManager alarmManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,6 +257,8 @@ public class NavDrawer extends AppCompatActivity
                 @Override
                 public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
                     //TODO neste caso não há nada a fazer, o outros métodos vão usar os dados offline
+                    isOnline = false;
+
                     SQLiteDatabase db = databaseHelper.getReadableDatabase();
                     String[] projection = {"*"};
                     Cursor cursor = db.query("prova", projection, null, null, null, null, null);

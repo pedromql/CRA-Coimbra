@@ -2,8 +2,11 @@ package poolgrammers.cra_coimbra;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
@@ -176,21 +179,73 @@ public class PesquisarProva extends Fragment {
          * Create the AsyncHttpClient object;
          * call the get() method with the uri, params and the AsynchResponseHandler interface as parameters
          */
-        AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-        params.put("token",MainActivity.readTokenFromFile(getContext(), "token"));
-        params.put("responder","false");
-        client.get(uri, params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                onGetProvasSuccess(bytes);
-            }
+        NavDrawer navDrawer = (NavDrawer)getActivity();
+        if (navDrawer.isOnline) {
 
-            @Override
-            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                onGetProvasFailure(i);
+            AsyncHttpClient client = new AsyncHttpClient();
+            RequestParams params = new RequestParams();
+            params.put("token", MainActivity.readTokenFromFile(getContext(), "token"));
+            params.put("responder", "false");
+            client.get(uri, params, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                    onGetProvasSuccess(bytes);
+                }
+
+                @Override
+                public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                    pDialog.hide();
+
+                    //TODO configure offline mode
+
+                    NavDrawer navDrawer = (NavDrawer)getActivity();
+                    navDrawer.isOnline = false;
+
+                    Snackbar snackbar = Snackbar.make(getView(), "Sem Internet. A mostrar provas em cache.", Snackbar.LENGTH_INDEFINITE);
+                    snackbar.show();
+
+                    SQLiteDatabase db = navDrawer.databaseHelper.getReadableDatabase();
+                    String[] projection = {"*"};
+                    Cursor cursor = db.query("prova", projection, null, null, null, null, null);
+
+                    List<String> list = new ArrayList<String>();
+                    Spinner provas = (Spinner) mainView.findViewById(R.id.spinner_provas);
+
+                    while(cursor.moveToNext()) {
+                        String designacao = cursor.getString(
+                                cursor.getColumnIndex("designacao"));
+                        list.add(designacao);
+                    }
+                    cursor.close();
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, list );
+                    provas.setAdapter(adapter);
+                }
+            });
+        }
+        else { //Todo get provas from database
+            pDialog.hide();
+
+            Snackbar snackbar = Snackbar.make(getView(), "Sem Internet. A mostrar provas em cache.", Snackbar.LENGTH_INDEFINITE);
+            snackbar.show();
+
+            SQLiteDatabase db = navDrawer.databaseHelper.getReadableDatabase();
+            String[] projection = {"*"};
+            Cursor cursor = db.query("prova", projection, null, null, null, null, null);
+
+            List<String> list = new ArrayList<String>();
+            Spinner provas = (Spinner) mainView.findViewById(R.id.spinner_provas);
+
+            while(cursor.moveToNext()) {
+                String designacao = cursor.getString(
+                        cursor.getColumnIndex("designacao"));
+                list.add(designacao);
             }
-        });
+            cursor.close();
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, list );
+            provas.setAdapter(adapter);
+        }
     }
 
 
@@ -232,23 +287,110 @@ public class PesquisarProva extends Fragment {
 
     }
 
-    private void getInfoProva(String provaSelecionada) {
-        AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-        params.put("token",MainActivity.readTokenFromFile(getContext(), "token"));
-        params.put("designacao",provaSelecionada);
-        client.get(uri1, params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                onGetInfoProvaSuccess(bytes);
-            }
+    private void getInfoProva(final String provaSelecionada) {
 
-            @Override
-            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                onGetInfoProvaFailure(i);
-            }
-        });
+        final NavDrawer navDrawer = (NavDrawer)getActivity();
+        if (navDrawer.isOnline) {
 
+            AsyncHttpClient client = new AsyncHttpClient();
+            RequestParams params = new RequestParams();
+            params.put("token", MainActivity.readTokenFromFile(getContext(), "token"));
+            params.put("designacao", provaSelecionada);
+            client.get(uri1, params, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                    onGetInfoProvaSuccess(bytes);
+                }
+
+                @Override
+                public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                    //todo get details from database
+                    onGetInfoProvaFailure(i);
+                    NavDrawer navDrawer = (NavDrawer)getActivity();
+                    SQLiteDatabase db = navDrawer.databaseHelper.getReadableDatabase();
+                    String[] projection = {"*"};
+                    String[] selector = {provaSelecionada};
+                    Cursor cursor = db.query("prova", projection, "designacao = ?", selector, null, null, null);
+
+                    while(cursor.moveToNext()) {
+                        String modalidade = cursor.getString(
+                                cursor.getColumnIndex("modalidade"));
+                        String local = cursor.getString(
+                                cursor.getColumnIndex("local"));
+                        String regulamento = cursor.getString(
+                                cursor.getColumnIndex("regulamento"));
+                        String responsavel_cra = cursor.getString(
+                                cursor.getColumnIndex("responsavel_cra"));
+                        String juiz_arbitro = cursor.getString(
+                                cursor.getColumnIndex("juiz_arbitro"));
+                        infoProvaArray.add(new InfoProvaItem(1, modalidade, regulamento, local, responsavel_cra, juiz_arbitro));
+                    }
+                    cursor.close();
+
+                    Cursor cursorSessoes = db.query("sessao", projection, "prova_designacao = ?", selector, null, null, null);
+
+                    while(cursorSessoes.moveToNext()) {
+                        int ano = cursorSessoes.getInt(
+                                cursorSessoes.getColumnIndex("ano"));
+                        int mes = cursorSessoes.getInt(
+                                cursorSessoes.getColumnIndex("mes"));
+                        int dia = cursorSessoes.getInt(
+                                cursorSessoes.getColumnIndex("dia"));
+                        int hora = cursorSessoes.getInt(
+                                cursorSessoes.getColumnIndex("hora"));
+                        int minuto = cursorSessoes.getInt(
+                                cursorSessoes.getColumnIndex("minuto"));
+
+                        String data = String.format(Locale.UK, "%02d", dia) + "/" + String.format(Locale.UK, "%02d", mes) + "/" + ano;
+                        String tempo = String.format(Locale.UK, "%02d", hora) + ":" + String.format(Locale.UK, "%02d", minuto);
+                        infoProvaArray.add(new InfoProvaItem(2, data, tempo));
+                    }
+                    consultaProvaAdapter.notifyDataSetChanged();
+
+                }
+            });
+        }
+        else { //todo get details from database
+            SQLiteDatabase db = navDrawer.databaseHelper.getReadableDatabase();
+            String[] projection = {"*"};
+            String[] selector = {provaSelecionada};
+            Cursor cursor = db.query("prova", projection, "designacao = ?", selector, null, null, null);
+
+            while(cursor.moveToNext()) {
+                String modalidade = cursor.getString(
+                        cursor.getColumnIndex("modalidade"));
+                String local = cursor.getString(
+                        cursor.getColumnIndex("local"));
+                String regulamento = cursor.getString(
+                        cursor.getColumnIndex("regulamento"));
+                String responsavel_cra = cursor.getString(
+                        cursor.getColumnIndex("responsavel_cra"));
+                String juiz_arbitro = cursor.getString(
+                        cursor.getColumnIndex("juiz_arbitro"));
+                infoProvaArray.add(new InfoProvaItem(1, modalidade, regulamento, local, responsavel_cra, juiz_arbitro));
+            }
+            cursor.close();
+
+            Cursor cursorSessoes = db.query("sessao", projection, "prova_designacao = ?", selector, null, null, null);
+
+            while(cursorSessoes.moveToNext()) {
+                int ano = cursorSessoes.getInt(
+                        cursorSessoes.getColumnIndex("ano"));
+                int mes = cursorSessoes.getInt(
+                        cursorSessoes.getColumnIndex("mes"));
+                int dia = cursorSessoes.getInt(
+                        cursorSessoes.getColumnIndex("dia"));
+                int hora = cursorSessoes.getInt(
+                        cursorSessoes.getColumnIndex("hora"));
+                int minuto = cursorSessoes.getInt(
+                        cursorSessoes.getColumnIndex("minuto"));
+
+                String data = String.format(Locale.UK, "%02d", dia) + "/" + String.format(Locale.UK, "%02d", mes) + "/" + ano;
+                String tempo = String.format(Locale.UK, "%02d", hora) + ":" + String.format(Locale.UK, "%02d", minuto);
+                infoProvaArray.add(new InfoProvaItem(2, data, tempo));
+            }
+            consultaProvaAdapter.notifyDataSetChanged();
+        }
     }
 
     public void onGetInfoProvaSuccess(byte[] bytes){
