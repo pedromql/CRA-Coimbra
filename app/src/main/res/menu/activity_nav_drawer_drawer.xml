@@ -15,6 +15,10 @@
             android:id="@+id/nav_alterar_disponibilidade"
             android:icon="@drawable/ic_pencil"
             android:title="Alterar disponibilidade" />
+        <item
+            android:id="@+id/nav_alterar_informacoes"
+            android:icon="@drawable/ic_edit_user"
+            android:title="Alterar informações pessoais" />
     </group>
 
     <group

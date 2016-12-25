@@ -51,7 +51,7 @@ import static poolgrammers.cra_coimbra.Utility.getServerUrl;
 
 public class NavDrawer extends AppCompatActivity
         implements OnNavigationItemSelectedListener, AlterarDisponibilidade.OnFragmentInteractionListener,
-        PesquisarProva.OnFragmentInteractionListener, ResponderPreConvocatoria.OnFragmentInteractionListener {
+        PesquisarProva.OnFragmentInteractionListener, ResponderPreConvocatoria.OnFragmentInteractionListener, AlterarInformacoes.OnFragmentInteractionListener {
 
     public DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
@@ -158,6 +158,8 @@ public class NavDrawer extends AppCompatActivity
             fragmentClass = ResponderPreConvocatoria.class;
         } else if (id == R.id.nav_alterar_disponibilidade) {
             fragmentClass = AlterarDisponibilidade.class;
+        } else if (id == R.id.nav_alterar_informacoes) {
+            fragmentClass = AlterarInformacoes.class;
         } else if (id == R.id.nav_logout) {
             //Cancels alarm
             Intent intent = new Intent(this, NotificationsBroadcastReceiver.class);
