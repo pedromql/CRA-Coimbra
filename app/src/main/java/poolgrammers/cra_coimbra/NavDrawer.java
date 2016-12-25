@@ -45,6 +45,7 @@ import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 import poolgrammers.cra_coimbra.Util.InfoProvaItem;
+import poolgrammers.cra_coimbra.Util.SessionItem;
 
 import static poolgrammers.cra_coimbra.Utility.getServerUrl;
 
@@ -210,7 +211,6 @@ public class NavDrawer extends AppCompatActivity
             client.get(getServerUrl()+"get_provas", params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int code, Header[] headers, byte[] bytes) {
-                    //TODO reiniciar a BD
                     SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
                     //limpar a BD
@@ -232,10 +232,12 @@ public class NavDrawer extends AppCompatActivity
                                     values.put("designacao",designacao);
                                     db.insert("prova",null, values);
                                     provas.add(designacao);
-                                    //TODO get info prova
                                 }
 
                                 saveProvaDetails(provas);
+                                //TODO ir buscar as provas que estão para responder e as provas que estão para alterar
+                                getProvasPorResponder();
+                                getProvasAlterar();
                             }
                             else {
 //                                Toast.makeText(getContext(), "Não há provas!", Toast.LENGTH_LONG).show();
@@ -273,7 +275,10 @@ public class NavDrawer extends AppCompatActivity
                         while (cursorSessoes.moveToNext()) {
                             int id_sessao = cursorSessoes.getInt(
                                     cursorSessoes.getColumnIndex("id_sessao"));
+                            int resposta = cursorSessoes.getInt(
+                                    cursorSessoes.getColumnIndex("resposta"));
                             System.out.println(id_sessao);
+                            System.out.println(resposta);
                         }
                     }
                     cursor.close();
@@ -292,7 +297,6 @@ public class NavDrawer extends AppCompatActivity
                 client.get(getServerUrl()+"get_prova", params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int code, Header[] headers, byte[] bytes) {
-                        //todo update content with retrieved info
                         try {
                             // JSON Object
                             JSONObject jsonResponse = new JSONObject(new String(bytes));
@@ -349,6 +353,153 @@ public class NavDrawer extends AppCompatActivity
                     public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 //                        onGetInfoProvaFailure(i);
                         //nothing to do here
+                    }
+                });
+            }
+        }
+
+        public void getProvasPorResponder() {
+            RequestParams params = new RequestParams();
+            params.put("token", MainActivity.readTokenFromFile(getApplicationContext(), "token"));
+            params.put("responder", true);
+            SyncHttpClient client = new SyncHttpClient();
+            client.get(getServerUrl()+"get_provas", params, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int code, Header[] headers, byte[] bytes) {
+                    String response = new String(bytes);
+                    try {
+                        // JSON Object
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if (jsonResponse.getBoolean("success")) {
+                            JSONArray provasJSON = new JSONArray(jsonResponse.getString("result"));
+                            for (int i = 0; i < provasJSON.length(); i++) {
+                                JSONObject prova = provasJSON.getJSONObject(i);
+                                if (prova.getInt("tipo") == 0) {
+                                    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                                    ContentValues values = new ContentValues();
+                                    values.put("tipo", 2);
+
+                                    String[] selectionArgs = {prova.getString("designacao")};
+                                    db.update("prova", values, "designacao = ?", selectionArgs);
+                                }
+                            }
+                        }
+                        else {
+//                            Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+//                        Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int code, Header[] headers, byte[] bytes, Throwable throwable) {
+//                    pDialog.hide();
+
+//                    Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        public void getProvasAlterar() {
+            RequestParams params = new RequestParams();
+            params.put("token", MainActivity.readTokenFromFile(getApplicationContext(), "token"));
+            params.put("responder", "edit");
+            SyncHttpClient client = new SyncHttpClient();
+            client.get(getServerUrl()+"get_provas", params, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int code, Header[] headers, byte[] bytes) {
+                    String response = new String(bytes);
+
+                    System.out.println (response);
+                    try {
+                        // JSON Object
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if (jsonResponse.getBoolean("success")) {
+                            JSONArray provasJSON = new JSONArray(jsonResponse.getString("result"));
+                            ArrayList<String> provas = new ArrayList<String>();
+                            for (int i = 0; i < provasJSON.length(); i++) {
+                                JSONObject prova = provasJSON.getJSONObject(i);
+                                if (prova.getInt("tipo") == 0) {
+                                    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                                    ContentValues values = new ContentValues();
+                                    values.put("tipo", 3);
+
+                                    String[] selectionArgs = {prova.getString("designacao")};
+                                    db.update("prova", values, "designacao = ?", selectionArgs);
+                                    provas.add(prova.getString("designacao"));
+                                }
+                            }
+
+                            //TODO get respostas
+                            getRespostasSessoes(provas);
+
+                        }
+                        else {
+//                            Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+//                        Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int code, Header[] headers, byte[] bytes, Throwable throwable) {
+//                    pDialog.hide();
+
+//                    Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        public void getRespostasSessoes(ArrayList<String> provas) {
+            for (int i = 0; i < provas.size(); i++) {
+                SyncHttpClient client = new SyncHttpClient();
+                RequestParams params = new RequestParams();
+                params.put("token",MainActivity.readTokenFromFile(getApplicationContext(), "token"));
+                params.put("designacao", provas.get(i));
+
+                String uri = getServerUrl()+"get_sessoes_respondidas";
+                client.get(uri, params, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int code, Header[] headers, byte[] bytes) {
+                        String response = new String(bytes);
+
+                        System.out.println (response);
+                        try {
+                            // JSON Object
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getBoolean("success")) {
+                                JSONArray sessoesJSON = new JSONArray(jsonResponse.getString("result"));
+                                for (int i = 0; i < sessoesJSON.length(); i++) {
+                                    JSONObject sessao = sessoesJSON.getJSONObject(i);
+
+                                    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                                    ContentValues values = new ContentValues();
+                                    if (sessao.getInt("resposta") == 1) values.put("resposta", 1);
+                                    else values.put("resposta", -1);
+
+                                    String[] selectionArgs = {sessao.getString("id_sessao")};
+                                    db.update("sessao", values, "id_sessao = ?", selectionArgs);
+                                }
+
+                            }
+                            else {
+//                                Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+//                            Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int code, Header[] headers, byte[] bytes, Throwable throwable) {
+//                        pDialog.hide();
+
+//                        Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
                     }
                 });
             }
