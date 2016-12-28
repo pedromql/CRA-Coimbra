@@ -57,6 +57,8 @@ public class NavDrawer extends AppCompatActivity
 
     public Boolean isOnline = true;
 
+    public Snackbar snackbar;
+
     private AlarmManager alarmManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

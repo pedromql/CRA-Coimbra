@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -210,6 +211,10 @@ public class ResponderPreConvocatoria extends Fragment {
         client.get(uri, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int code, Header[] headers, byte[] bytes) {
+                NavDrawer navDrawer = (NavDrawer)getActivity();
+                navDrawer.isOnline = true;
+                if (navDrawer.snackbar != null) navDrawer.snackbar.dismiss();
+
                 String response = new String(bytes);
 
                 pDialog.hide();
@@ -239,7 +244,10 @@ public class ResponderPreConvocatoria extends Fragment {
             public void onFailure(int code, Header[] headers, byte[] bytes, Throwable throwable) {
                 pDialog.hide();
 
-                Toast.makeText(getContext(), "Problemas na ligação ao servidor!", Toast.LENGTH_LONG).show();
+                NavDrawer navDrawer = (NavDrawer)getActivity();
+                navDrawer.isOnline = false;
+                navDrawer.snackbar = Snackbar.make(getActivity().findViewById(R.id.drawer_layout), "Sem Internet.", Snackbar.LENGTH_INDEFINITE);
+                navDrawer.snackbar.show();
             }
         });
     }

@@ -190,6 +190,9 @@ public class PesquisarProva extends Fragment {
                 @Override
                 public void onSuccess(int i, Header[] headers, byte[] bytes) {
                     onGetProvasSuccess(bytes);
+                    NavDrawer navDrawer = (NavDrawer)getActivity();
+                    navDrawer.isOnline = true;
+                    if (navDrawer.snackbar != null) navDrawer.snackbar.dismiss();
                 }
 
                 @Override
@@ -201,8 +204,8 @@ public class PesquisarProva extends Fragment {
                     NavDrawer navDrawer = (NavDrawer)getActivity();
                     navDrawer.isOnline = false;
 
-                    Snackbar snackbar = Snackbar.make(getView(), "Sem Internet. A mostrar provas em cache.", Snackbar.LENGTH_INDEFINITE);
-                    snackbar.show();
+                    navDrawer.snackbar = Snackbar.make(getActivity().findViewById(R.id.drawer_layout), "Sem Internet. A mostrar provas em cache.", Snackbar.LENGTH_INDEFINITE);
+                    navDrawer.snackbar.show();
 
                     SQLiteDatabase db = navDrawer.databaseHelper.getReadableDatabase();
                     String[] projection = {"*"};
@@ -226,8 +229,8 @@ public class PesquisarProva extends Fragment {
         else { //Todo get provas from database
             pDialog.hide();
 
-            Snackbar snackbar = Snackbar.make(getView(), "Sem Internet. A mostrar provas em cache.", Snackbar.LENGTH_INDEFINITE);
-            snackbar.show();
+            navDrawer.snackbar = Snackbar.make(getActivity().findViewById(R.id.drawer_layout), "Sem Internet. A mostrar provas em cache.", Snackbar.LENGTH_INDEFINITE);
+            navDrawer.snackbar.show();
 
             SQLiteDatabase db = navDrawer.databaseHelper.getReadableDatabase();
             String[] projection = {"*"};
